@@ -30,7 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String selectedPerson = '';
 
   @override
-  void initState() {
+  void initState() { //stateful위젯에서 초기화하는 곳
     super.initState();
     dataItems = Data.dataItems;
     _initNextState();
@@ -47,36 +47,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-
-  void _showNextState() {
-    // 3초 뒤에 이미지가 반투명해지고 글이 나타남
-    Future.delayed(Duration(seconds: 0), () {
-      setState(() {
-        showImage = false;
-        showText = true;
-      });
-      _showButton();
-    });
-  }
-
   void _showButton() {
     // 3초 뒤에 버튼이 나타남
     Future.delayed(Duration(seconds: 3), () {
       setState(() {
         showButton = true;
       });
-    });
-  }
-
-  void _nextItem() {
-    // 다음 데이터로 이동하고 상태 초기화
-    setState(() {
-      currentIndex = (currentIndex + 1) % dataItems.length;
-      showImage = true;
-      showText = false;
-      showButton = false;
-      showChoices = false; // 선택지를 다시 숨김
-      _showNextState();
     });
   }
 
@@ -105,6 +81,17 @@ class _MyHomePageState extends State<MyHomePage> {
       showButton = false;
       showChoices = false; // 선택지를 다시 숨김
       _showNextState();
+    });
+  }
+
+  void _showNextState() {
+    // 0초 뒤에 이미지가 반투명해지고 글이 나타남
+    Future.delayed(Duration(seconds: 0), () {
+      setState(() {
+        showImage = false;
+        showText = true;
+      });
+      _showButton();
     });
   }
 
@@ -178,32 +165,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildChoicesWidget() {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: [
-        ElevatedButton(
+      children: Data.nameItems.map((nameItem) {
+        return ElevatedButton(
           onPressed: () {
-            _selectChoice('구현준');
+            _selectChoice(nameItem.text);
           },
-          child: Text('구현준'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            _selectChoice('김수찬');
-          },
-          child: Text('김수찬'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            _selectChoice('이승원');
-          },
-          child: Text('이승원'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            _selectChoice('오해람');
-          },
-          child: Text('오해람'),
-        ),
-      ],
+          child: Text(nameItem.text),
+        );
+      }).toList(),
     );
   }
 }
