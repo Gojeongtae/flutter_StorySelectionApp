@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'data.dart';
+import 'userStoryScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,7 +11,51 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyHomePage(),
+      home: HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('스토리'),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: [
+            Tab(icon: Icon(Icons.home), text: '홈'),
+            Tab(icon: Icon(Icons.book), text: '유저 스토리'),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          MyHomePage(),
+          UserStoryScreen(),
+        ],
+      ),
     );
   }
 }
@@ -69,6 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       selectedPerson = choice;
       _showNewStory();
+      _updateUserStory(); // 새로운 정보를 등록
     });
   }
 
@@ -94,6 +140,28 @@ class _MyHomePageState extends State<MyHomePage> {
       _showButton();
     });
   }
+
+  void _updateUserStory() {
+    // 새로운 정보를 UserData에 추가
+    UserData.userStories.add(UserStory(
+      name: '고정태',
+      age: 25, // 예시로 나이를 추가
+      gender: 'Male', // 예시로 성별을 추가
+      adventureStyle: 'Adventure', // 예시로 탐험 스타일을 추가
+      selectedBy: 'You', // 선택한 사람
+      storyPart: 'New story part', // 스토리 일부
+    ));
+  }
+
+  void _showUserStories() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UserStoryScreen(),
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             // 글 또는 선택지 표시
-            AnimatedOpacity( //showText가 true일 때, 글 보이도록
+            AnimatedOpacity(//showText가 true일 때, 글 보이도록
               opacity: (showText || showChoices) ? 1.0 : 0.0,
               duration: Duration(seconds: 0),
               child: Positioned(
