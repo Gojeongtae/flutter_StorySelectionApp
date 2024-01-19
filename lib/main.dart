@@ -21,6 +21,7 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+//애니메이션을 위한 TickerProvider
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -44,8 +45,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Tab(icon: Icon(Icons.home), text: '홈'),
-            Tab(icon: Icon(Icons.book), text: '유저 스토리'),
+            Tab(icon: Icon(Icons.home), text: '선택지'),
+            Tab(icon: Icon(Icons.book), text: '메세지'),
           ],
         ),
       ),
@@ -143,14 +144,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _updateUserStory() {
     // 새로운 정보를 UserData에 추가
-    UserData.userStories.add(UserStory(
-      name: '고정태',
-      age: 25, // 예시로 나이를 추가
-      gender: 'Male', // 예시로 성별을 추가
-      adventureStyle: 'Adventure', // 예시로 탐험 스타일을 추가
-      selectedBy: 'You', // 선택한 사람
-      storyPart: 'New story part', // 스토리 일부
-    ));
+    if (UserData.DatauserStories.isNotEmpty) {
+      UserData.userStories.add(UserStory(
+        name: UserData.DatauserStories[0].name,
+        age: UserData.DatauserStories[0].age,
+        gender: UserData.DatauserStories[0].gender,
+        adventureStyle: UserData.DatauserStories[0].adventureStyle,
+        selectedBy: UserData.DatauserStories[1].name, // 선택한 사람
+        storyPart: Data.dataItems[0].shortText, // 스토리 일부
+      ));
+    }
   }
 
   void _showUserStories() {

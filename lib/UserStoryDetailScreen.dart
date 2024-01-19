@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 
 class UserStoryDetailScreen extends StatelessWidget {
   final UserStory userStory;
+  final DataItem dataItem;
 
-  UserStoryDetailScreen({required this.userStory});
+  UserStoryDetailScreen({
+    required this.userStory,
+    required this.dataItem});
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +21,13 @@ class UserStoryDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.asset(
-              'images/blurred_image.jpg', // 블러 처리된 이미지 경로
+              'images/1.png', // 블러 처리된 이미지 경로
               width: double.infinity,
               height: 200,
               fit: BoxFit.cover,
             ),
             SizedBox(height: 16),
-            Text('스토리 내용: ${userStory.storyPart}'),
+            Text('스토리 내용: ${dataItem.text}'),
             SizedBox(height: 16),
             Text('선택: ${userStory.selectedBy}'),
           ],
