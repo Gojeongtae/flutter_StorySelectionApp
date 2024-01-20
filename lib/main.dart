@@ -66,7 +66,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMixin {
   late List<DataItem> dataItems;
   int currentIndex = 0;
   bool showText = false;
@@ -75,7 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
   bool showChoices = false;
   String selectedPerson = '';
 
+
   @override
+  bool get wantKeepAlive => true;
+
   void initState() { //stateful위젯에서 초기화하는 곳
     super.initState();
     dataItems = Data.dataItems;

@@ -29,7 +29,7 @@ class UserStoryDetailScreen extends StatelessWidget {
             SizedBox(height: 16),
             Text('스토리 내용: ${dataItem.text}'),
             SizedBox(height: 16),
-            Text('선택: ${userStory.selectedBy}'),
+            Text('${userStory.selectedBy}님께서 이 이야기에 참가하게 되었습니다'),
           ],
         ),
       ),
