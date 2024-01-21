@@ -21,7 +21,6 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-//애니메이션을 위한 TickerProvider
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -69,20 +68,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMixin {
   late List<DataItem> dataItems;
   int currentIndex = 0;
+  bool showInit = true;
   bool showText = false;
   bool showButton = false;
-  bool showImage = true;
+  bool showImage = false;
   bool showChoices = false;
   String selectedPerson = '';
-
 
   @override
   bool get wantKeepAlive => true;
 
-  void initState() { //stateful위젯에서 초기화하는 곳
+  void initState() {
     super.initState();
     dataItems = Data.dataItems;
-    _initNextState();
+
   }
 
   void _initNextState() {
@@ -168,6 +167,12 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
     );
   }
 
+  // 새로운 버튼을 누를 때 이미지를 보이도록 하는 함수
+  void _showImage() {
+    setState(() {
+      showImage = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,8 +184,7 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // 배경 이미지
-            AnimatedOpacity(  //showImage가 true일 때, 이미지 보이도록
+            AnimatedOpacity(
               opacity: showImage ? 1.0 : 0.5,
               duration: Duration(seconds: 1),
               child: Container(
@@ -194,8 +198,7 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
                 ),
               ),
             ),
-            // 글 또는 선택지 표시
-            AnimatedOpacity(//showText가 true일 때, 글 보이도록
+            AnimatedOpacity(
               opacity: (showText || showChoices) ? 1.0 : 0.0,
               duration: Duration(seconds: 0),
               child: Positioned(
@@ -219,17 +222,28 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
                 ),
               ),
             ),
-            // 버튼
             if (showButton)
               Positioned(
                 bottom: 16,
                 right: 16,
                 child: ElevatedButton(
-                  onPressed: () { _showChoices();
+                  onPressed: () {
+                    _showChoices();
                   },
                   child: Text('다음으로'),
                 ),
               ),
+            if(showInit)
+            Positioned( //처음 시작할 때 버튼
+              child: ElevatedButton(
+                onPressed: () {
+                  _initNextState(); 
+                  showImage = true;
+                  showInit = false;
+                },
+                child: Text('새로운 스토리 시작하기'),
+              ),
+            ),
           ],
         ),
       ),
