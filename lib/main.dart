@@ -68,10 +68,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMixin {
   late List<DataItem> dataItems;
   int currentIndex = 0;
-  bool showInit = true;
+  bool showInit = true; //true 일 때, 시작하기 버튼이 보임
   bool showText = false;
   bool showButton = false;
-  bool showImage = false;
+  bool showImage = false; //true일 때, 이미지가 1.0으로 보임
   bool showChoices = false;
   String selectedPerson = '';
 
@@ -185,7 +185,7 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
           alignment: Alignment.center,
           children: [
             AnimatedOpacity(
-              opacity: showImage ? 1.0 : 0.5,
+              opacity: (showInit && !showImage) ? 0.0 : (!showInit && showImage ? 1.0 : 0.5),  //처음에 버튼 누르기 전에 init :t ,image:f이고 버튼만 보이고 이미지는 0.0, 버튼 누르면 init : f, image : t이고 이미지만 1.0으로 보임 , 3초 뒤에 init:f, image :f이고 이미지 반투명이랑 버튼 안보임.
               duration: Duration(seconds: 1),
               child: Container(
                 width: double.infinity,
@@ -223,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
               ),
             ),
             if (showButton)
-              Positioned(
+              Positioned( //다음으로 버튼
                 bottom: 16,
                 right: 16,
                 child: ElevatedButton(
@@ -237,9 +237,11 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
             Positioned( //처음 시작할 때 버튼
               child: ElevatedButton(
                 onPressed: () {
-                  _initNextState(); 
-                  showImage = true;
-                  showInit = false;
+                  setState(() {
+                    showImage = true;
+                    showInit = false;
+                  });
+                  _initNextState();
                 },
                 child: Text('새로운 스토리 시작하기'),
               ),
