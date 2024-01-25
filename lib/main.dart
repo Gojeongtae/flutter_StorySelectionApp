@@ -64,14 +64,13 @@ class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
-
 class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMixin {
   late List<DataItem> dataItems;
   int currentIndex = 0;
-  bool showInit = true; //true 일 때, 시작하기 버튼이 보임
+  bool showInit = true;
   bool showText = false;
   bool showButton = false;
-  bool showImage = false; //true일 때, 이미지가 1.0으로 보임
+  bool showImage = false;
   bool showChoices = false;
   String selectedPerson = '';
 
@@ -81,31 +80,27 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
   void initState() {
     super.initState();
     dataItems = Data.dataItems;
-
   }
 
   void _initNextState() {
-    // 3초 뒤에 이미지가 반투명해지고 글이 나타남
-    Future.delayed(Duration(seconds: 3), () {
+    _delayedExecution(() {
       setState(() {
         showImage = false;
         showText = true;
       });
       _showButton();
-    });
+    }, 3);
   }
 
   void _showButton() {
-    // 3초 뒤에 버튼이 나타남
-    Future.delayed(Duration(seconds: 3), () {
+    _delayedExecution(() {
       setState(() {
         showButton = true;
       });
-    });
+    }, 3);
   }
 
   void _showChoices() {
-    // 선택지를 보여주도록 설정
     setState(() {
       showButton = false;
       showChoices = true;
@@ -113,47 +108,43 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
   }
 
   void _selectChoice(String choice) {
-    // 선택한 정보를 반영하여 2번째 데이터의 텍스트를 출력
     setState(() {
       selectedPerson = choice;
       _showNewStory();
-      _updateUserStory(); // 새로운 정보를 등록
+      _updateUserStory();
     });
   }
 
   void _showNewStory() {
-    // 선택된 정보를 반영하여 2번째 데이터의 텍스트를 출력
     setState(() {
-      currentIndex = 1; // 2번째 데이터로 이동
+      currentIndex = 1;
       showImage = false;
       showText = false;
       showButton = false;
-      showChoices = false; // 선택지를 다시 숨김
+      showChoices = false;
       _showNextState();
     });
   }
 
   void _showNextState() {
-    // 0초 뒤에 이미지가 반투명해지고 글이 나타남
-    Future.delayed(Duration(seconds: 0), () {
+    _delayedExecution(() {
       setState(() {
         showImage = false;
         showText = true;
       });
       _showButton();
-    });
+    }, 0);
   }
 
   void _updateUserStory() {
-    // 새로운 정보를 UserData에 추가
     if (UserData.DatauserStories.isNotEmpty) {
       UserData.userStories.add(UserStory(
         name: UserData.DatauserStories[0].name,
         age: UserData.DatauserStories[0].age,
         gender: UserData.DatauserStories[0].gender,
         adventureStyle: UserData.DatauserStories[0].adventureStyle,
-        selectedBy: UserData.DatauserStories[1].name, // 선택한 사람
-        storyPart: Data.dataItems[0].shortText, // 스토리 일부
+        selectedBy: UserData.DatauserStories[1].name,
+        storyPart: Data.dataItems[0].shortText,
       ));
     }
   }
@@ -167,7 +158,6 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
     );
   }
 
-  // 새로운 버튼을 누를 때 이미지를 보이도록 하는 함수
   void _showImage() {
     setState(() {
       showImage = true;
@@ -185,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
           alignment: Alignment.center,
           children: [
             AnimatedOpacity(
-              opacity: (showInit && !showImage) ? 0.0 : (!showInit && showImage ? 1.0 : 0.5),  //처음에 버튼 누르기 전에 init :t ,image:f이고 버튼만 보이고 이미지는 0.0, 버튼 누르면 init : f, image : t이고 이미지만 1.0으로 보임 , 3초 뒤에 init:f, image :f이고 이미지 반투명이랑 버튼 안보임.
+              opacity: (showInit && !showImage) ? 0.0 : (!showInit && showImage ? 1.0 : 0.5),
               duration: Duration(seconds: 1),
               child: Container(
                 width: double.infinity,
@@ -223,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
               ),
             ),
             if (showButton)
-              Positioned( //다음으로 버튼
+              Positioned(
                 bottom: 16,
                 right: 16,
                 child: ElevatedButton(
@@ -234,18 +224,18 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
                 ),
               ),
             if(showInit)
-            Positioned( //처음 시작할 때 버튼
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    showImage = true;
-                    showInit = false;
-                  });
-                  _initNextState();
-                },
-                child: Text('새로운 스토리 시작하기'),
+              Positioned(
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      showImage = true;
+                      showInit = false;
+                    });
+                    _initNextState();
+                  },
+                  child: Text('새로운 스토리 시작하기'),
+                ),
               ),
-            ),
           ],
         ),
       ),
@@ -265,4 +255,10 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
       }).toList(),
     );
   }
+
+  Future<void> _delayedExecution(Function action, int seconds) async {
+    await Future.delayed(Duration(seconds: seconds));
+    action();
+  }
+
 }
