@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "89037691986",
+    "project_id": "flutter-storyselectionapp",
+    "storage_bucket": "flutter-storyselectionapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:89037691986:android:f6c962fcb9e5b679f3938b",
+        "android_client_info": {
+          "package_name": "com.example.example_7"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAXh7udfztgF1KIQUdQhSCxcsF8TiQO4Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
