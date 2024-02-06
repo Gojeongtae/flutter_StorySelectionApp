@@ -28,6 +28,7 @@ class AuthService {
 
     // アクセストークンが null だったら中止
     if (accessToken == null) {
+      return;
     }
 
     /* Firebase と通信 */
