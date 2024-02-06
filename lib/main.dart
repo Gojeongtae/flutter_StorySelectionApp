@@ -1,9 +1,19 @@
 import 'dart:async';
+import 'package:example_7/service.dart';
 import 'package:flutter/material.dart';
 import 'data.dart';
 import 'userStoryScreen.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(MyApp());
 }
 
@@ -21,7 +31,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -64,7 +75,9 @@ class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
-class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMixin {
+
+class _MyHomePageState extends State<MyHomePage>
+    with AutomaticKeepAliveClientMixin {
   late List<DataItem> dataItems;
   int currentIndex = 0;
   bool showInit = true;
@@ -175,7 +188,9 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
           alignment: Alignment.center,
           children: [
             AnimatedOpacity(
-              opacity: (showInit && !showImage) ? 0.0 : (!showInit && showImage ? 1.0 : 0.5),
+              opacity: (showInit && !showImage)
+                  ? 0.0
+                  : (!showInit && showImage ? 1.0 : 0.5),
               duration: Duration(seconds: 1),
               child: Container(
                 width: double.infinity,
@@ -188,27 +203,31 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
                 ),
               ),
             ),
-            AnimatedOpacity(
-              opacity: (showText || showChoices) ? 1.0 : 0.0,
-              duration: Duration(seconds: 0),
-              child: Positioned(
-                top: 16,
-                left: 16,
-                right: 16,
+            Positioned(
+              top: 16,
+              left: 16,
+              right: 16,
+              child: AnimatedOpacity(
+                opacity: (showText || showChoices) ? 1.0 : 0.0,
+                duration: Duration(seconds: 0),
+
+                // Your FadeTransition logic here
                 child: Container(
                   padding: EdgeInsets.all(16),
                   child: showChoices
                       ? _buildChoicesWidget()
                       : Text(
-                    currentIndex == 1
-                        ? dataItems[currentIndex].text.replaceAll('{personName}', selectedPerson)
-                        : dataItems[currentIndex].text,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                          currentIndex == 1
+                              ? dataItems[currentIndex]
+                                  .text
+                                  .replaceAll('{personName}', selectedPerson)
+                              : dataItems[currentIndex].text,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                 ),
               ),
             ),
@@ -219,14 +238,20 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
                 child: ElevatedButton(
                   onPressed: () {
                     _showChoices();
+                    FirebaseAnalytics.instance.logEvent(
+                      name: '다음으로가 눌렸습니다',
+                    );
                   },
                   child: Text('다음으로'),
                 ),
               ),
-            if(showInit)
+            if (showInit)
               Positioned(
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    final service = AuthService();
+                    await service.signIn();
+
                     setState(() {
                       showImage = true;
                       showInit = false;
@@ -260,5 +285,4 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
     await Future.delayed(Duration(seconds: seconds));
     action();
   }
-
 }
