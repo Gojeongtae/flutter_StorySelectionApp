@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'UserStoryDetailScreen.dart';
-import 'data.dart';
+import '../data.dart';
 
 class UserStoryScreen extends StatelessWidget {
   @override

@@ -1,4 +1,4 @@
-import 'data.dart';
+import '../data.dart';
 import 'package:flutter/material.dart';
 
 class UserStoryDetailScreen extends StatelessWidget {

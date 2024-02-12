@@ -6,7 +6,7 @@ plugins {
 
 ext {
     ndkVersion = flutter.ndkVersion
-    compileSdkVersion = 33
+
 }
 
 def localProperties = new Properties()
@@ -28,6 +28,7 @@ if (flutterVersionName == null) {
 }
 
 android {
+    compileSdkVersion = 33
     namespace "com.example.example_7"
     ndkVersion ndkVersion
 

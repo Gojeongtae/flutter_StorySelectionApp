@@ -1,75 +1,13 @@
+import 'dart:js_util';
+
+import 'package:example_7/firestore.dart';
+import 'package:flutter/material.dart';
+import '../data.dart'; // Import other dependencies as needed
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'dart:async';
 import 'package:example_7/service.dart';
-import 'package:flutter/material.dart';
-import 'data.dart';
 import 'userStoryScreen.dart';
-
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('스토리'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: [
-            Tab(icon: Icon(Icons.home), text: '선택지'),
-            Tab(icon: Icon(Icons.book), text: '메세지'),
-          ],
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          MyHomePage(),
-          UserStoryScreen(),
-        ],
-      ),
-    );
-  }
-}
+import 'package:example_7/firestore.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -86,6 +24,8 @@ class _MyHomePageState extends State<MyHomePage>
   bool showImage = false;
   bool showChoices = false;
   String selectedPerson = '';
+
+  AddUser addUser = AddUser('고정태', '닌텐도', 23);
 
   @override
   bool get wantKeepAlive => true;
@@ -180,9 +120,6 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('스토리'),
-      ),
       body: Center(
         child: Stack(
           alignment: Alignment.center,
@@ -217,17 +154,17 @@ class _MyHomePageState extends State<MyHomePage>
                   child: showChoices
                       ? _buildChoicesWidget()
                       : Text(
-                          currentIndex == 1
-                              ? dataItems[currentIndex]
-                                  .text
-                                  .replaceAll('{personName}', selectedPerson)
-                              : dataItems[currentIndex].text,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                    currentIndex == 1
+                        ? dataItems[currentIndex]
+                        .text
+                        .replaceAll('{personName}', selectedPerson)
+                        : dataItems[currentIndex].text,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ),
@@ -249,8 +186,11 @@ class _MyHomePageState extends State<MyHomePage>
               Positioned(
                 child: ElevatedButton(
                   onPressed: () async {
-                    final service = AuthService();
-                    await service.signIn();
+
+                    addUser.addUser();
+
+                    //final service = AuthService();
+                    //await service.signIn();
 
                     setState(() {
                       showImage = true;
@@ -261,6 +201,14 @@ class _MyHomePageState extends State<MyHomePage>
                   child: Text('새로운 스토리 시작하기'),
                 ),
               ),
+            Positioned(child: ElevatedButton(
+              onPressed: () async{
+                final service = AuthService();
+                await service.signIn();
+              },
+                // ,
+                child: Text('로그인'),
+            ))
           ],
         ),
       ),
