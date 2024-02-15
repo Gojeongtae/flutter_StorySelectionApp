@@ -6,7 +6,7 @@ import '../data.dart'; // Import other dependencies as needed
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'dart:async';
 import 'package:example_7/service.dart';
-import 'userStoryScreen.dart';
+import 'UserStoryScreen.dart';
 import 'package:example_7/firestore.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -154,17 +154,17 @@ class _MyHomePageState extends State<MyHomePage>
                   child: showChoices
                       ? _buildChoicesWidget()
                       : Text(
-                    currentIndex == 1
-                        ? dataItems[currentIndex]
-                        .text
-                        .replaceAll('{personName}', selectedPerson)
-                        : dataItems[currentIndex].text,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                          currentIndex == 1
+                              ? dataItems[currentIndex]
+                                  .text
+                                  .replaceAll('{personName}', selectedPerson)
+                              : dataItems[currentIndex].text,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                 ),
               ),
             ),
@@ -186,7 +186,6 @@ class _MyHomePageState extends State<MyHomePage>
               Positioned(
                 child: ElevatedButton(
                   onPressed: () async {
-
                     addUser.addUser();
 
                     //final service = AuthService();
@@ -201,14 +200,6 @@ class _MyHomePageState extends State<MyHomePage>
                   child: Text('새로운 스토리 시작하기'),
                 ),
               ),
-            Positioned(child: ElevatedButton(
-              onPressed: () async{
-                final service = AuthService();
-                await service.signIn();
-              },
-                // ,
-                child: Text('로그인'),
-            ))
           ],
         ),
       ),
